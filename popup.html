@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Blackout</title>
+<style>
+  :root {
+    color-scheme: dark;
+  }
+  body {
+    width: 300px;
+    margin: 0;
+    padding: 14px 16px 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #14141f;
+    color: #e8e8f0;
+  }
+  h1 {
+    font-size: 15px;
+    margin: 0 0 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h1 img { width: 20px; height: 20px; }
+  .sub {
+    font-size: 11px;
+    color: #8888a0;
+    margin: 0 0 14px;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+  }
+  .row label {
+    font-size: 13px;
+  }
+  .switch {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    display: inline-block;
+  }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #40405a;
+    border-radius: 22px;
+    transition: .15s;
+  }
+  .slider:before {
+    content: "";
+    position: absolute;
+    height: 16px; width: 16px;
+    left: 3px; bottom: 3px;
+    background: #e8e8f0;
+    border-radius: 50%;
+    transition: .15s;
+  }
+  input:checked + .slider { background: #ffd76a; }
+  input:checked + .slider:before { transform: translateX(18px); background: #14141f; }
+
+  .slider-row { margin: 12px 0; }
+  .slider-row .top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 4px;
+    color: #c4c4d6;
+  }
+  input[type=range] {
+    width: 100%;
+    accent-color: #ffd76a;
+  }
+  .divider {
+    border-top: 1px solid #2a2a3c;
+    margin: 12px 0;
+  }
+  .site-box {
+    background: #1c1c2c;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 4px;
+  }
+  .site-box .host {
+    font-size: 12px;
+    color: #ffd76a;
+    font-weight: 600;
+    margin-bottom: 6px;
+    word-break: break-all;
+  }
+  footer {
+    margin-top: 14px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+  }
+  footer a {
+    color: #8888a0;
+    text-decoration: none;
+  }
+  footer a:hover { color: #ffd76a; }
+  button.link-btn {
+    background: none;
+    border: none;
+    color: #8888a0;
+    font-size: 11px;
+    cursor: pointer;
+    padding: 0;
+  }
+  button.link-btn:hover { color: #ffd76a; }
+</style>
+</head>
+<body>
+  <h1><img src="icons/icon32.png" alt="" /> Blackout</h1>
+  <p class="sub">Dark mode, anywhere on the web.</p>
+
+  <div class="row">
+    <label for="globalToggle">Enabled everywhere</label>
+    <label class="switch">
+      <input type="checkbox" id="globalToggle" />
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="site-box">
+    <div class="host" id="hostLabel">this site</div>
+    <div class="row" style="margin:0">
+      <label for="siteToggle">Site override</label>
+      <label class="switch">
+        <input type="checkbox" id="siteToggle" />
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div id="siteOverrideState" style="font-size:11px;color:#8888a0;margin-top:4px;"></div>
+    <button class="link-btn" id="clearOverride" style="margin-top:6px;">Reset this site to global setting</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="slider-row">
+    <div class="top"><span>Brightness</span><span id="brightnessVal">100%</span></div>
+    <input type="range" id="brightness" min="70" max="130" step="1" />
+  </div>
+  <div class="slider-row">
+    <div class="top"><span>Contrast</span><span id="contrastVal">100%</span></div>
+    <input type="range" id="contrast" min="70" max="130" step="1" />
+  </div>
+  <div class="slider-row">
+    <div class="top"><span>Sepia (warmth)</span><span id="sepiaVal">0%</span></div>
+    <input type="range" id="sepia" min="0" max="30" step="1" />
+  </div>
+  <div class="slider-row">
+    <div class="top"><span>Grayscale</span><span id="grayscaleVal">0%</span></div>
+    <input type="range" id="grayscale" min="0" max="100" step="1" />
+  </div>
+
+  <div class="row">
+    <label for="ignoreImages">Keep images in color</label>
+    <label class="switch">
+      <input type="checkbox" id="ignoreImages" />
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="row">
+    <label for="scheduleEnabled">Auto dark by time of day</label>
+    <label class="switch">
+      <input type="checkbox" id="scheduleEnabled" />
+      <span class="slider"></span>
+    </label>
+  </div>
+  <div class="row" id="scheduleTimes">
+    <label style="font-size:12px;">From <input type="time" id="scheduleStart" style="background:#1c1c2c;color:#e8e8f0;border:1px solid #2a2a3c;border-radius:4px;"></label>
+    <label style="font-size:12px;">To <input type="time" id="scheduleEnd" style="background:#1c1c2c;color:#e8e8f0;border:1px solid #2a2a3c;border-radius:4px;"></label>
+  </div>
+
+  <footer>
+    <a href="options.html" target="_blank" id="openOptions">All settings</a>
+    <a href="https://example.com/blackout" target="_blank">Rate &amp; support</a>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

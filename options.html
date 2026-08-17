@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Blackout - Settings</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f0f18;
+    color: #e8e8f0;
+  }
+  h1 { display:flex; align-items:center; gap: 10px; font-size: 22px; }
+  h1 img { width: 28px; height: 28px; }
+  h2 { font-size: 15px; color: #ffd76a; margin-top: 32px; }
+  p.desc { color: #9898b0; font-size: 13px; margin-top: -6px; }
+  .card {
+    background: #171724;
+    border: 1px solid #26263a;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+  .row { display:flex; align-items:center; justify-content:space-between; margin:12px 0; }
+  label { font-size: 13px; }
+  input[type=range] { width: 260px; accent-color: #ffd76a; }
+  input[type=time] {
+    background:#1c1c2c;color:#e8e8f0;border:1px solid #2a2a3c;border-radius:6px;padding:4px 8px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 4px; border-bottom: 1px solid #26263a; }
+  th { color: #9898b0; font-weight: 500; }
+  button {
+    background: #ffd76a; color: #14141f; border: none; border-radius: 6px;
+    padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 600;
+  }
+  button:hover { opacity: .85; }
+  button.secondary {
+    background: transparent; color: #ff6a6a; border: 1px solid #3a2a2a;
+  }
+  .switch {
+    position: relative; width: 40px; height: 22px; display: inline-block;
+  }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; inset: 0; background: #40405a; border-radius: 22px; cursor: pointer; transition: .15s;
+  }
+  .slider:before {
+    content:""; position:absolute; height:16px; width:16px; left:3px; bottom:3px;
+    background:#e8e8f0; border-radius:50%; transition:.15s;
+  }
+  input:checked + .slider { background:#ffd76a; }
+  input:checked + .slider:before { transform: translateX(18px); background:#14141f; }
+  footer { margin-top: 40px; font-size: 12px; color: #6a6a80; text-align:center; }
+</style>
+</head>
+<body>
+  <h1><img src="icons/icon48.png" alt=""> Blackout</h1>
+  <p class="desc">Global settings, appearance tuning, schedule, and per-site overrides.</p>
+
+  <div class="card">
+    <h2 style="margin-top:0">Global</h2>
+    <div class="row">
+      <label>Enabled everywhere</label>
+      <label class="switch"><input type="checkbox" id="enabled"><span class="slider"></span></label>
+    </div>
+    <div class="row">
+      <label>Brightness (<span id="brightnessVal">100</span>%)</label>
+      <input type="range" id="brightness" min="70" max="130">
+    </div>
+    <div class="row">
+      <label>Contrast (<span id="contrastVal">100</span>%)</label>
+      <input type="range" id="contrast" min="70" max="130">
+    </div>
+    <div class="row">
+      <label>Sepia warmth (<span id="sepiaVal">0</span>%)</label>
+      <input type="range" id="sepia" min="0" max="30">
+    </div>
+    <div class="row">
+      <label>Grayscale (<span id="grayscaleVal">0</span>%)</label>
+      <input type="range" id="grayscale" min="0" max="100">
+    </div>
+    <div class="row">
+      <label>Keep images/videos in color</label>
+      <label class="switch"><input type="checkbox" id="ignoreImages"><span class="slider"></span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Schedule</h2>
+    <p class="desc">Automatically switch dark mode on/off by time of day (applies to sites without their own override).</p>
+    <div class="row">
+      <label>Enable schedule</label>
+      <label class="switch"><input type="checkbox" id="scheduleEnabled"><span class="slider"></span></label>
+    </div>
+    <div class="row">
+      <label>Dark from</label>
+      <input type="time" id="scheduleStart">
+    </div>
+    <div class="row">
+      <label>Dark until</label>
+      <input type="time" id="scheduleEnd">
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Per-site overrides</h2>
+    <p class="desc">Sites you've customized from the popup. Remove one to fall back to the global setting.</p>
+    <table id="overridesTable">
+      <thead><tr><th>Site</th><th>Enabled</th><th>Brightness</th><th>Contrast</th><th></th></tr></thead>
+      <tbody id="overridesBody"></tbody>
+    </table>
+    <p id="noOverrides" class="desc" style="display:none;">No site overrides yet.</p>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Backup</h2>
+    <div class="row">
+      <label>Export settings as JSON</label>
+      <button id="exportBtn">Export</button>
+    </div>
+    <div class="row">
+      <label>Import settings from JSON</label>
+      <button id="importBtn">Import</button>
+    </div>
+    <input type="file" id="importFile" accept="application/json" style="display:none;">
+  </div>
+
+  <footer>Blackout v1.0.0 &middot; Works on Chrome, Edge, Firefox &amp; Safari</footer>
+
+  <script src="options.js"></script>
+</body>
+</html>
